@@ -1,13 +1,13 @@
 package app.rodrigonovoa.mybookcollection.ui.myRecords
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import app.rodrigonovoa.mybookcollection.data.Record
+import app.rodrigonovoa.mybookcollection.db.FakeCollectionDatabase
 
 class MyRecordsViewModel : ViewModel() {
+    private val fakeDb = FakeCollectionDatabase()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+    fun getRecordsFromDb(): List<Record>{
+        return fakeDb.getRecords()
     }
-    val text: LiveData<String> = _text
 }

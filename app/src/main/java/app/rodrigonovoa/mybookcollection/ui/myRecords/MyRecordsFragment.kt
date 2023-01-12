@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyRecordsBinding
+import app.rodrigonovoa.mybookcollection.ui.myBooks.MyBooksListAdapter
 
 class MyRecordsFragment : Fragment() {
 
+    private lateinit var viewModel: MyRecordsViewModel
     private var _binding: FragmentMyRecordsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +22,23 @@ class MyRecordsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
+        viewModel =
             ViewModelProvider(this).get(MyRecordsViewModel::class.java)
-
         _binding = FragmentMyRecordsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setRecyclerviewAdapter()
+    }
+
+    private fun setRecyclerviewAdapter() {
+        val fakeData = viewModel.getRecordsFromDb()
+        val adapter = MyRecordsListAdapter(fakeData)
+        binding.rcRecordsList.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcRecordsList.adapter = adapter
     }
 
     override fun onDestroyView() {
