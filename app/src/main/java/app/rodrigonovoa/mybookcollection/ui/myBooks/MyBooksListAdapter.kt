@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
 import app.rodrigonovoa.mybookcollection.data.Book
+import com.bumptech.glide.Glide
 
 class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapter<MyBooksListAdapter.ViewHolder>() {
 
@@ -20,8 +21,19 @@ class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val bookItem = booksList[position]
-        // holder.imvCover.setImageResource(ItemsViewModel.image)
+
+        loadCover(holder, bookItem)
         holder.tvTitle.text = bookItem.name
+        holder.tvAuthor.text = bookItem.author
+    }
+
+    private fun loadCover(
+        holder: ViewHolder,
+        bookItem: Book
+    ) {
+        Glide.with(holder.imvCover.context)
+            .load(bookItem.imageUrl)
+            .into(holder.imvCover);
     }
 
     override fun getItemCount(): Int {
@@ -31,5 +43,6 @@ class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapt
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imvCover: ImageView = itemView.findViewById(R.id.imv_book_cover)
         val tvTitle: TextView = itemView.findViewById(R.id.tv_book_name)
+        val tvAuthor: TextView = itemView.findViewById(R.id.tv_book_author)
     }
 }
