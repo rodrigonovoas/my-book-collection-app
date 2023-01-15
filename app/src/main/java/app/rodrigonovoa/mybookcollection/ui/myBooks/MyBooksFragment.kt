@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyBooksBinding
 
@@ -35,7 +36,7 @@ class MyBooksFragment : Fragment() {
     private fun setRecyclerviewAdapter() {
         val fakeData = viewModel.getBookList()
         val adapter = MyBooksListAdapter(fakeData)
-        binding.rcBookList.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcBookList.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.rcBookList.adapter = adapter
     }
 
