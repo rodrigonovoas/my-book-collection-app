@@ -6,9 +6,9 @@ class FakeCollectionDatabase: BookCollectionDbInterace {
     override fun getRecords(): List<Record> {
         return listOf(
             Record(1, 100, "El Horror de Dunwich",
-                "HP Lovecraft", "", 100),
+                "HP Lovecraft", "https://m.media-amazon.com/images/I/41mIf-FO3EL.jpg", 7200000),
             Record(2, 100, "Misery",
-                "Stephen King", "", 100)
+                "Stephen King", "https://m.media-amazon.com/images/I/51SSlC2WctL.jpg", 7200000)
         )
     }
 }
