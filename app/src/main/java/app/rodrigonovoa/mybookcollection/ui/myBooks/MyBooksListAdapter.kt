@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
-import app.rodrigonovoa.mybookcollection.data.Book
+import app.rodrigonovoa.mybookcollection.data.model.Book
 import com.bumptech.glide.Glide
 
 class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapter<MyBooksListAdapter.ViewHolder>() {

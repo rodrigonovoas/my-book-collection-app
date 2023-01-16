@@ -1,8 +1,8 @@
 package app.rodrigonovoa.mybookcollection.db
 
-import app.rodrigonovoa.mybookcollection.data.Record
+import app.rodrigonovoa.mybookcollection.data.model.Record
 
-class FakeCollectionDatabase: BookCollectionDbInterace {
+class FakeCollectionDatabase: BookCollectionDbImpl {
     override fun getRecords(): List<Record> {
         return listOf(
             Record(1, 100, "El Horror de Dunwich",
