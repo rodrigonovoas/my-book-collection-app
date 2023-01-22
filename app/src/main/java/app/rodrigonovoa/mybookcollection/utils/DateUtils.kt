@@ -16,12 +16,6 @@ object DateUtils {
     }
 
     fun fromMillisecondsToDateString(time: Long) : String {
-        /*
-        val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
-        val dateString = simpleDateFormat.format(time)
-        return dateString
-         */
-
         return String.format("%02d:%02d:%02d",
             TimeUnit.MILLISECONDS.toHours(time),
             TimeUnit.MILLISECONDS.toMinutes(time) -

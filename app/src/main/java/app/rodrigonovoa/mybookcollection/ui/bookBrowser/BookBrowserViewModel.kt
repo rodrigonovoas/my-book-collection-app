@@ -21,6 +21,8 @@ class BookBrowserViewModel(private val repository: GoogleBooksRepository): ViewM
                     val books = it.body()
                     if(books != null){
                         _downloadedBooks.postValue(books.items)
+                    } else {
+                        _downloadedBooks.postValue(listOf())
                     }
                 }
         }
