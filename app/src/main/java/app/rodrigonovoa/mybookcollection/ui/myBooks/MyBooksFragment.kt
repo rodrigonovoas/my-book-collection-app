@@ -1,5 +1,6 @@
 package app.rodrigonovoa.mybookcollection.ui.myBooks
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import app.rodrigonovoa.mybookcollection.api.GoogleBooksRepository
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyBooksBinding
+import app.rodrigonovoa.mybookcollection.ui.bookBrowser.BookBrowserActivity
 
 class MyBooksFragment : Fragment() {
 
@@ -31,6 +32,8 @@ class MyBooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setRecyclerviewAdapter()
+
+        binding.btnAddBook.setOnClickListener { requireContext().startActivity(Intent(context, BookBrowserActivity::class.java)) }
     }
 
     private fun setRecyclerviewAdapter() {

@@ -1,5 +1,11 @@
 package app.rodrigonovoa.mybookcollection.data.api
 
+data class QueryResult(
+    val kind: String,
+    val totalItems: Int,
+    val items: List<BookResponse>
+)
+
 data class BookResponse(
     val id: String,
     val selfLink: String,
@@ -9,5 +15,11 @@ data class BookResponse(
 data class VolumeInfo(
     val title: String,
     val publisher: String,
-    val publishedDate: String
+    val publishedDate: String,
+    val imageLinks: ImageLinks
+)
+
+data class ImageLinks(
+    val smallThumbnail: String,
+    val thumbnail: String
 )
