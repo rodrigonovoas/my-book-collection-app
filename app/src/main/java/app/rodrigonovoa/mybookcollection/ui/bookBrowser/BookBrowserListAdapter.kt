@@ -22,6 +22,13 @@ class BookBrowserListAdapter(private val booksList: List<BookResponse>) : Recycl
         val bookItem = booksList[position]
 
         loadCover(holder, bookItem)
+        setTexts(holder, bookItem)
+    }
+
+    private fun setTexts(
+        holder: ViewHolder,
+        bookItem: BookResponse
+    ) {
         holder.tvTitle.text = bookItem.volumeInfo.title
     }
 
@@ -29,9 +36,11 @@ class BookBrowserListAdapter(private val booksList: List<BookResponse>) : Recycl
         holder: BookBrowserListAdapter.ViewHolder,
         bookItem: BookResponse
     ) {
-        Glide.with(holder.imvCover.context)
-            .load(bookItem.volumeInfo.imageLinks.smallThumbnail)
-            .into(holder.imvCover);
+        if(bookItem.volumeInfo.imageLinks != null) {
+            Glide.with(holder.imvCover.context)
+                .load(bookItem.volumeInfo.imageLinks.smallThumbnail)
+                .into(holder.imvCover);
+        }
     }
 
     override fun getItemCount(): Int {

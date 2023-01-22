@@ -21,10 +21,16 @@ class MyRecordsListAdapter(private val recordsList: List<Record>) : RecyclerView
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recordItem = recordsList[position]
+        setTexts(holder, recordItem)
+        loadCover(holder, recordItem)
+    }
 
+    private fun setTexts(
+        holder: ViewHolder,
+        recordItem: Record
+    ) {
         holder.tvBookTitleAndAuthor.text = recordItem.bookName + " (${recordItem.bookAuthor})"
         holder.tvBookSpentTime.text = DateUtils.fromMillisecondsToDateString(recordItem.spentTime)
-        loadCover(holder, recordItem)
     }
 
     private fun loadCover(

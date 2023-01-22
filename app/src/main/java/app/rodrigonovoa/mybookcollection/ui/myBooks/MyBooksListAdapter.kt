@@ -22,6 +22,13 @@ class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapt
         val bookItem = booksList[position]
 
         loadCover(holder, bookItem)
+        setTexts(holder, bookItem)
+    }
+
+    private fun setTexts(
+        holder: ViewHolder,
+        bookItem: Book
+    ) {
         holder.tvTitle.text = bookItem.name
         holder.tvAuthor.text = bookItem.author
     }
