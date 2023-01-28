@@ -8,25 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
-import app.rodrigonovoa.mybookcollection.api.GoogleBooksRepository
-import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BookBrowserActivity : AppCompatActivity() {
-    private lateinit var viewModel: BookBrowserViewModel
+    private val viewModel: BookBrowserViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_browser)
-
-        viewModel = BookBrowserViewModel(
-            GoogleBooksRepository(),
-            BookCollectionRepository(this,
-                CoroutineScope(
-                SupervisorJob())
-            )
-        )
 
         setObservables()
         viewListeneres()

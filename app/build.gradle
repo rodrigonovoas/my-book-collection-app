@@ -65,4 +65,10 @@ dependencies {
     def room_version = "2.5.0"
     implementation("androidx.room:room-runtime:$room_version")
     kapt "androidx.room:room-compiler:$room_version"
+
+    // timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // koin DI
+    implementation "io.insert-koin:koin-android:3.3.2"
 }

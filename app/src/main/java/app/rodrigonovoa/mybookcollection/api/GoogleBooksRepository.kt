@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 
-class GoogleBooksRepository : GoogleBooksApiImpl {
+class GoogleBooksRepository(val service: GoogleBooksService) : GoogleBooksApiImpl {
     override fun getBooksFromApiByName(name: String): Flow<Response<QueryResult?>> = flow {
-        val books = RetrofitHelper.getClient().getBooksByName(name).execute()
+        val books = service.getBooksByName(name).execute()
         emit(books)
     }.flowOn(Dispatchers.IO)
 }
