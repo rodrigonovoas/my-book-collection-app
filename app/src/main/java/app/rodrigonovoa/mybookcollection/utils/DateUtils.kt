@@ -23,4 +23,8 @@ object DateUtils {
             TimeUnit.MILLISECONDS.toSeconds(time) -
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)))
     }
+
+    fun getCurrentDateTimeAsTimeStamp(): Long {
+        return Calendar.getInstance().timeInMillis
+    }
 }

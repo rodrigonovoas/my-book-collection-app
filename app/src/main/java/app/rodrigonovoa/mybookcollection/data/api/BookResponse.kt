@@ -14,7 +14,8 @@ data class BookResponse(
 
 data class VolumeInfo(
     val title: String,
-    val publisher: String,
+    val authors: List<String>?,
+    val description: String,
     val publishedDate: String,
     val imageLinks: ImageLinks
 )

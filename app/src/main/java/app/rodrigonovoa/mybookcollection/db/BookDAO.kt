@@ -9,7 +9,7 @@ interface BookDAO {
     fun insertBook(book: BookEntity): Long
 
     @Query("select * from book")
-    fun gelAllBooks(): List<BookEntity>
+    fun getAllBooks(): List<BookEntity>
 
     @Update
     fun updateBook(user: BookEntity)

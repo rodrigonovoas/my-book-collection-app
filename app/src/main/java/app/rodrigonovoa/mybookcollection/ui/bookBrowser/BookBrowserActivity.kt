@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
+import app.rodrigonovoa.mybookcollection.data.api.BookResponse
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BookBrowserActivity : AppCompatActivity() {
@@ -23,20 +24,27 @@ class BookBrowserActivity : AppCompatActivity() {
 
     private fun setObservables() {
         viewModel.downloadedBooks.observe(this) { it ->
-            val rc = findViewById<RecyclerView>(R.id.rc_books)
-            val adapter = BookBrowserListAdapter(it)
-            rc.layoutManager = LinearLayoutManager(this)
-            rc.adapter = adapter
+            setRecyclerviewAdapter(it)
+        }
+    }
 
-            adapter.onItemClick = { book ->
-                viewModel.addBookToLocalDb(book)
-            }
+    private fun setRecyclerviewAdapter(it: List<BookResponse>) {
+        val rc = findViewById<RecyclerView>(R.id.rc_books)
+        val adapter = BookBrowserListAdapter(it)
+        rc.layoutManager = LinearLayoutManager(this)
+        rc.adapter = adapter
+
+        adapter.onItemClick = { book ->
+            viewModel.addBookToLocalDb(book)
         }
     }
 
     private fun viewListeneres() {
-        val edtSearch = findViewById<EditText>(R.id.edt_search)
+        searchListener()
+    }
 
+    private fun searchListener() {
+        val edtSearch = findViewById<EditText>(R.id.edt_search)
         edtSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 viewModel.getBooksFromApi(s.toString())

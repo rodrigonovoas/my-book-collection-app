@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyBooksBinding
 import app.rodrigonovoa.mybookcollection.ui.bookBrowser.BookBrowserActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyBooksFragment : Fragment() {
 
-    private lateinit var viewModel: MyBooksViewModel
+    private val viewModel: MyBooksViewModel by viewModel()
     private var _binding: FragmentMyBooksBinding? = null
     private val binding get() = _binding!!
 
@@ -22,16 +22,20 @@ class MyBooksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel =
-            ViewModelProvider(this).get(MyBooksViewModel::class.java)
         _binding = FragmentMyBooksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setRecyclerviewAdapter()
+
+        getBooksFromLocalDb()
         viewListeners()
+        viewModelObservers()
+    }
+
+    private fun getBooksFromLocalDb() {
+        viewModel.getBookList()
     }
 
     private fun viewListeners() {
@@ -45,11 +49,12 @@ class MyBooksFragment : Fragment() {
         }
     }
 
-    private fun setRecyclerviewAdapter() {
-        val fakeData = viewModel.getBookList()
-        val adapter = MyBooksListAdapter(fakeData)
-        binding.rcBookList.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.rcBookList.adapter = adapter
+    private fun viewModelObservers() {
+        viewModel.localDbBooks.observe(viewLifecycleOwner) { it ->
+            val adapter = MyBooksListAdapter(it)
+            binding.rcBookList.layoutManager = GridLayoutManager(requireContext(), 3)
+            binding.rcBookList.adapter = adapter
+        }
     }
 
     override fun onDestroyView() {
