@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
 import app.rodrigonovoa.mybookcollection.api.GoogleBooksRepository
+import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 
 class BookBrowserActivity : AppCompatActivity() {
     private lateinit var viewModel: BookBrowserViewModel
@@ -17,7 +20,13 @@ class BookBrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_browser)
 
-        viewModel = BookBrowserViewModel(GoogleBooksRepository())
+        viewModel = BookBrowserViewModel(
+            GoogleBooksRepository(),
+            BookCollectionRepository(this,
+                CoroutineScope(
+                SupervisorJob())
+            )
+        )
 
         setObservables()
         viewListeneres()
@@ -29,6 +38,10 @@ class BookBrowserActivity : AppCompatActivity() {
             val adapter = BookBrowserListAdapter(it)
             rc.layoutManager = LinearLayoutManager(this)
             rc.adapter = adapter
+
+            adapter.onItemClick = { book ->
+                viewModel.addBookToLocalDb(book)
+            }
         }
     }
 

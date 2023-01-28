@@ -2,30 +2,72 @@ package app.rodrigonovoa.mybookcollection.db
 
 import android.content.Context
 import app.rodrigonovoa.mybookcollection.data.db.BookEntity
+import app.rodrigonovoa.mybookcollection.data.db.OpinionEntity
+import app.rodrigonovoa.mybookcollection.data.db.RecordEntity
 import kotlinx.coroutines.CoroutineScope
 
 class BookCollectionRepository(context: Context, scope: CoroutineScope) {
     var bookDao: BookDAO = BookCollectionDatabase.Companion.getDatabase(context, scope).bookDao()
-    var db: BookDAO = BookCollectionDatabase.Companion.getDatabase(context, scope).bookDao()
+    var recordDAO: RecordDAO = BookCollectionDatabase.Companion.getDatabase(context, scope).recordDao()
+    var opinionDAO: OpinionDAO = BookCollectionDatabase.Companion.getDatabase(context, scope).opinionDao()
 
+    /**
+     * BOOK
+     */
 
-    //Fetch All the Users
-    fun getAllUsers(): List<BookEntity> {
-        return db.gelAllBooks()
+    fun getAllBooks(): List<BookEntity> {
+        return bookDao.gelAllBooks()
     }
 
-    // Insert new user
     fun insertBook(book: BookEntity): Long {
-        return db.insertBook(book)
+        return bookDao.insertBook(book)
     }
 
-    // update user
     fun updateBook(book: BookEntity) {
-        db.updateBook(book)
+        bookDao.updateBook(book)
     }
 
-    // Delete user
     fun deleteBook(book: BookEntity) {
-        db.deleteBook(book)
+        bookDao.deleteBook(book)
+    }
+
+    /**
+     * RECORD
+     */
+
+    fun getAllRecords(): List<RecordEntity> {
+        return recordDAO.gelAllRecord()
+    }
+
+    fun insertRecord(record: RecordEntity): Long {
+        return recordDAO.insertRecord(record)
+    }
+
+    fun updateRecord(record: RecordEntity) {
+        recordDAO.updateRecord(record)
+    }
+
+    fun deleteRecord(record: RecordEntity) {
+        recordDAO.deleteRecord(record)
+    }
+
+    /**
+     * OPINION
+     */
+
+    fun getAllOpinion(): List<OpinionEntity> {
+        return opinionDAO.getAllOpinion()
+    }
+
+    fun insertOpinion(opinion: OpinionEntity): Long {
+        return opinionDAO.insertOpinion(opinion)
+    }
+
+    fun updateOpinion(opinion: OpinionEntity) {
+        opinionDAO.insertOpinion(opinion)
+    }
+
+    fun deleteOpinion(opinion: OpinionEntity) {
+        opinionDAO.deleteOpinion(opinion)
     }
 }

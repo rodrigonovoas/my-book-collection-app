@@ -9,7 +9,7 @@ interface OpinionDAO {
     fun insertOpinion(opinion: OpinionEntity): Long
 
     @Query("select * from opinion")
-    fun gelAllOpinion(): List<OpinionEntity>
+    fun getAllOpinion(): List<OpinionEntity>
 
     @Update
     fun updateOpinion(opinion: OpinionEntity)

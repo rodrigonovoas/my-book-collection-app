@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 abstract class BookCollectionDatabase : RoomDatabase() {
 
     abstract fun bookDao(): BookDAO
+    abstract fun recordDao(): RecordDAO
+    abstract fun opinionDao(): OpinionDAO
 
     private class BookCollectionDatabaseCallback(
         private val scope: CoroutineScope

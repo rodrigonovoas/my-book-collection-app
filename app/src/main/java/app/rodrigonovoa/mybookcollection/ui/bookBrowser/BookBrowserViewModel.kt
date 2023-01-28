@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.rodrigonovoa.mybookcollection.api.GoogleBooksRepository
 import app.rodrigonovoa.mybookcollection.data.api.BookResponse
+import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class BookBrowserViewModel(private val repository: GoogleBooksRepository): ViewModel() {
+class BookBrowserViewModel(private val repository: GoogleBooksRepository,
+                           private val bookCollectionRepository: BookCollectionRepository): ViewModel() {
     private val _downloadedBooks = MutableLiveData<List<BookResponse>>().apply { postValue(listOf())}
     val downloadedBooks: LiveData<List<BookResponse>> get() = _downloadedBooks
 
@@ -26,5 +28,9 @@ class BookBrowserViewModel(private val repository: GoogleBooksRepository): ViewM
                     }
                 }
         }
+    }
+
+    fun addBookToLocalDb(book: BookResponse) {
+        // code
     }
 }
