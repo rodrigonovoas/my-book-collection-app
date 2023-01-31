@@ -14,15 +14,29 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class BookBrowserViewModel(private val repository: GoogleBooksRepository,
+class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksRepository,
                            private val bookCollectionRepository: BookCollectionRepository): ViewModel() {
 
+    private val localStoredBooksIds: MutableList<String> = mutableListOf()
     private val _downloadedBooks = MutableLiveData<List<BookResponse>>().apply { postValue(listOf())}
     val downloadedBooks: LiveData<List<BookResponse>> get() = _downloadedBooks
 
+    init {
+        getIdsFromLocalDb()
+    }
+
+    private fun getIdsFromLocalDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val bookList = bookCollectionRepository.getAllBooks()
+            for (book in bookList) {
+                localStoredBooksIds.add(book.googleBookId)
+            }
+        }
+    }
+
     fun getBooksFromApi(bookName: String) {
-        viewModelScope.launch {
-            repository.getBooksFromApiByName(bookName)
+        viewModelScope.launch(Dispatchers.IO) {
+            googleBooksRepository.getBooksFromApiByName(bookName)
                 .catch {}
                 .collect {
                     val books = it.body()
@@ -36,8 +50,14 @@ class BookBrowserViewModel(private val repository: GoogleBooksRepository,
     }
 
     fun addBookToLocalDb(book: BookResponse) {
+        val valueFound = localStoredBooksIds.find { googleId -> book.id.equals(googleId) }
+
+        Timber.i("book already added")
+        if(valueFound != null) { return }
+
         val newBook = BookEntity(
             null,
+            book.id,
             DateUtils.getCurrentDateTimeAsTimeStamp(),
             book.volumeInfo.title,
             book.volumeInfo.authors?.get(0) ?: "",
