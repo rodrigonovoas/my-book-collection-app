@@ -11,6 +11,9 @@ interface BookDAO {
     @Query("select * from book")
     fun getAllBooks(): List<BookEntity>
 
+    @Query("select * from book where id=:id")
+    fun getBookById(id: Int): BookEntity
+
     @Update
     fun updateBook(user: BookEntity)
 

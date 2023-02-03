@@ -21,6 +21,6 @@ data class RecordEntity(
     @PrimaryKey(autoGenerate = true) var id: Int? = null,
     var dateTime: Long,
     var spentTime: Long,
-    var bookId: String,
-    var opinionId: String
+    var bookId: Int,
+    var opinionId: Int? = null
 )

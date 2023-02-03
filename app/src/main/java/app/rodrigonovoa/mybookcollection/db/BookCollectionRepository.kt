@@ -19,6 +19,10 @@ class BookCollectionRepository(context: Context, scope: CoroutineScope) {
         return bookDao.getAllBooks()
     }
 
+    suspend fun getBookById(bookId: Int): BookEntity {
+        return bookDao.getBookById(bookId)
+    }
+
     fun insertBook(book: BookEntity): Long {
         return bookDao.insertBook(book)
     }
