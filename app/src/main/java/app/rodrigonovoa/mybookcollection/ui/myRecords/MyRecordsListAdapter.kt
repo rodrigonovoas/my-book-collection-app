@@ -39,7 +39,8 @@ class MyRecordsListAdapter(private val recordsList: List<Record>) : RecyclerView
     ) {
         Glide.with(holder.imvBookCover.context)
             .load(recordItem.bookImageUrl)
-            .into(holder.imvBookCover);
+            .placeholder(R.drawable.ic_cover_not_found)
+            .into(holder.imvBookCover)
     }
 
     override fun getItemCount(): Int {

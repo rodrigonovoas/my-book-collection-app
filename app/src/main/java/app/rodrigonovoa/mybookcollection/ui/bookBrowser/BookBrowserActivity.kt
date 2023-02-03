@@ -99,7 +99,8 @@ class BookBrowserActivity : AppCompatActivity() {
         if (book.volumeInfo.imageLinks != null) {
             Glide.with(imvCover)
                 .load(book.volumeInfo.imageLinks.smallThumbnail)
-                .into(imvCover);
+                .placeholder(R.drawable.ic_cover_not_found)
+                .into(imvCover)
         }
 
         tvClose.setOnClickListener {
