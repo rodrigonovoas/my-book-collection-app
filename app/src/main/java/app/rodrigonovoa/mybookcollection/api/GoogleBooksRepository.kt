@@ -1,7 +1,7 @@
 package app.rodrigonovoa.mybookcollection.api
 
 import app.rodrigonovoa.mybookcollection.data.api.QueryResult
-import app.rodrigonovoa.mybookcollection.retrofit.RetrofitHelper
+import app.rodrigonovoa.mybookcollection.ui.retrofit.RetrofitHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

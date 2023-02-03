@@ -1,4 +1,4 @@
-package app.rodrigonovoa.mybookcollection.retrofit
+package app.rodrigonovoa.mybookcollection.ui.retrofit
 
 import app.rodrigonovoa.mybookcollection.api.GoogleBooksService
 import retrofit2.Retrofit

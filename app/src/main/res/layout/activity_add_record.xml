@@ -12,13 +12,19 @@
         android:layout_height="wrap_content"
         android:text="Selected book: " />
 
+    <Spinner
+        android:id="@+id/sp_selected_book"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_selected_book"/>
+
     <TextView
         android:id="@+id/tv_spent_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Spent Time"
-        android:layout_below="@+id/tv_selected_book"/>
+        android:layout_below="@+id/sp_selected_book"/>
 
     <EditText
         android:id="@+id/edt_spent_time"
