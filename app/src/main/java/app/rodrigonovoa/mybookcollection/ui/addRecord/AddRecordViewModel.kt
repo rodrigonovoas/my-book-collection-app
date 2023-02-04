@@ -11,28 +11,37 @@ import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRepository) :
     ViewModel() {
 
     private val _localDbBooks = MutableLiveData<List<BookEntity>>().apply { postValue(listOf()) }
     val localDbBooks: LiveData<List<BookEntity>> get() = _localDbBooks
+    var selectedBookId: Int = 0
 
     init {
         getBooksFromDatabase()
     }
 
-    fun insertNewRecord(spentTime: Long) {
+    fun insertNewRecord(spentHours: Long, spentMinutes: Long) {
+        val spentTime = convertSpentTimeIntoLong(spentHours, spentMinutes)
         val record =
             RecordEntity(
                 null, DateUtils.getCurrentDateTimeAsTimeStamp(),
-                spentTime, 1, null
+                spentTime, selectedBookId, null
             )
 
         viewModelScope.launch(Dispatchers.IO) {
             val addedRecord = bookCollectionRepository.insertRecord(record)
             Timber.i("DEBUG-- ADDED RECORD $addedRecord")
         }
+    }
+
+    private fun convertSpentTimeIntoLong(spentHours: Long, spentMinutes: Long): Long {
+        val minutesInMilis = TimeUnit.MINUTES.toMinutes(spentMinutes)
+        val hoursInMilis = TimeUnit.HOURS.toMillis(spentHours)
+        return minutesInMilis + hoursInMilis
     }
 
     private fun getBooksFromDatabase() {

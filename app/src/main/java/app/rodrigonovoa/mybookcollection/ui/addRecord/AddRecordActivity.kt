@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import app.rodrigonovoa.mybookcollection.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class AddRecordActivity : AppCompatActivity() {
     private val viewModel: AddRecordViewModel by viewModel()
@@ -18,20 +18,25 @@ class AddRecordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_record)
 
         val spSelectedBook = findViewById<Spinner>(R.id.sp_selected_book)
+        val edtSpentHours = findViewById<EditText>(R.id.edt_spent_time_hours)
+        val edtSpentMinutes = findViewById<EditText>(R.id.edt_spent_time_minutes)
         val btnAdd = findViewById<Button>(R.id.btn_add)
 
-        btnAdd.setOnClickListener { viewModel.insertNewRecord(10000) }
+        btnAdd.setOnClickListener {
+            if (viewModel.selectedBookId == 0) { return@setOnClickListener }
+            viewModel.insertNewRecord(
+                edtSpentHours.text.toString().toLong(), edtSpentMinutes.text.toString().toLong()
+            )
+        }
 
         spSelectedBook.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
-                Timber.i("book: ${viewModel.localDbBooks.value?.get(position)}")
+                viewModel.selectedBookId = viewModel.localDbBooks.value?.get(position)?.id ?: 0
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
-            }
+            override fun onNothingSelected(parent: AdapterView<*>) { }
         }
 
         viewModel.localDbBooks.observe(this) { it ->

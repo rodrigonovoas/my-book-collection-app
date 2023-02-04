@@ -3,6 +3,7 @@ package app.rodrigonovoa.mybookcollection.db
 import android.content.Context
 import app.rodrigonovoa.mybookcollection.data.db.BookEntity
 import app.rodrigonovoa.mybookcollection.data.db.OpinionEntity
+import app.rodrigonovoa.mybookcollection.data.db.RecordAndBookEntity
 import app.rodrigonovoa.mybookcollection.data.db.RecordEntity
 import kotlinx.coroutines.CoroutineScope
 
@@ -39,8 +40,12 @@ class BookCollectionRepository(context: Context, scope: CoroutineScope) {
      * RECORD
      */
 
-    fun getAllRecords(): List<RecordEntity> {
+    fun getAllRecords(): List<RecordAndBookEntity> {
         return recordDAO.gelAllRecord()
+    }
+
+    fun getRecordById(id: Int): RecordAndBookEntity {
+        return recordDAO.getRecordById(id)
     }
 
     fun insertRecord(record: RecordEntity): Long {
