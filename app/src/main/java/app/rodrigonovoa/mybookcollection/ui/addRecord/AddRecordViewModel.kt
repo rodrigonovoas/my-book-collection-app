@@ -10,7 +10,6 @@ import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
 import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRepository) :
@@ -34,12 +33,11 @@ class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRep
 
         viewModelScope.launch(Dispatchers.IO) {
             val addedRecord = bookCollectionRepository.insertRecord(record)
-            Timber.i("DEBUG-- ADDED RECORD $addedRecord")
         }
     }
 
     private fun convertSpentTimeIntoLong(spentHours: Long, spentMinutes: Long): Long {
-        val minutesInMilis = TimeUnit.MINUTES.toMinutes(spentMinutes)
+        val minutesInMilis = TimeUnit.MINUTES.toMillis(spentMinutes)
         val hoursInMilis = TimeUnit.HOURS.toMillis(spentHours)
         return minutesInMilis + hoursInMilis
     }
