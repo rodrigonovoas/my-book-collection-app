@@ -24,7 +24,7 @@ class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRep
     }
 
     fun insertNewRecord(spentHours: Long, spentMinutes: Long) {
-        val spentTime = convertSpentTimeIntoLong(spentHours, spentMinutes)
+        val spentTime = getSpentTimeInMillis(spentHours, spentMinutes)
         val record =
             RecordEntity(
                 null, DateUtils.getCurrentDateTimeAsTimeStamp(),
@@ -36,7 +36,7 @@ class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRep
         }
     }
 
-    private fun convertSpentTimeIntoLong(spentHours: Long, spentMinutes: Long): Long {
+    private fun getSpentTimeInMillis(spentHours: Long, spentMinutes: Long): Long {
         val minutesInMilis = TimeUnit.MINUTES.toMillis(spentMinutes)
         val hoursInMilis = TimeUnit.HOURS.toMillis(spentHours)
         return minutesInMilis + hoursInMilis

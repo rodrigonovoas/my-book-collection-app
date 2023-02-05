@@ -29,7 +29,8 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
         for (record in records) {
             storedRecords.add(
                 Record(
-                    record.id.toInt(), record.dateTime ?: 0, record.name ?: "", record.author ?: "", record.imageUrl ?: "",
+                    record.id.toInt(), record.dateTime ?: 0, record.name ?: "",
+                    record.author ?: "", record.imageUrl ?: "",
                     record.spentTime ?: 0
                 )
             )

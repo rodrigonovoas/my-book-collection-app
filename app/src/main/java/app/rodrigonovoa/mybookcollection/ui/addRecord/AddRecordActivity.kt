@@ -5,36 +5,43 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import app.rodrigonovoa.mybookcollection.R
+import app.rodrigonovoa.mybookcollection.databinding.ActivityAddRecordBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddRecordActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityAddRecordBinding
     private val viewModel: AddRecordViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_record)
+        binding = ActivityAddRecordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val spSelectedBook = findViewById<Spinner>(R.id.sp_selected_book)
-        val edtSpentHours = findViewById<EditText>(R.id.edt_spent_time_hours)
-        val edtSpentMinutes = findViewById<EditText>(R.id.edt_spent_time_minutes)
-        val btnAdd = findViewById<Button>(R.id.btn_add)
-        val btnBack = findViewById<Button>(R.id.btn_close)
+        viewListeners()
+        observeBooksFromDatabase()
+    }
 
-        btnAdd.setOnClickListener {
+    private fun observeBooksFromDatabase() {
+        viewModel.localDbBooks.observe(this) { it ->
+            val customDropDownAdapter = SpinnerCustomAdapter(this, it)
+            binding.spSelectedBook.adapter = customDropDownAdapter
+        }
+    }
+
+    private fun viewListeners() {
+        binding.btnAdd.setOnClickListener {
             if (viewModel.selectedBookId == 0) { return@setOnClickListener }
             viewModel.insertNewRecord(
-                edtSpentHours.text.toString().toLong(), edtSpentMinutes.text.toString().toLong()
+                binding.edtSpentTimeHours.text.toString().toLong(), binding.edtSpentTimeMinutes.text.toString().toLong()
             )
         }
 
-        btnBack.setOnClickListener { finish() }
+        binding.btnClose.setOnClickListener { finish() }
 
-        spSelectedBook.onItemSelectedListener = object :
+        // set selected book for viewModel
+        binding.spSelectedBook.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
@@ -44,10 +51,11 @@ class AddRecordActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) { }
         }
 
-        edtSpentMinutes.addTextChangedListener(object : TextWatcher {
+        // limit minutes to 59
+        binding.edtSpentTimeMinutes.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if(s.toString().toInt() > 59) {
-                    edtSpentMinutes.setText(0)
+                    binding.edtSpentTimeMinutes.setText(0)
                 }
             }
 
@@ -63,10 +71,5 @@ class AddRecordActivity : AppCompatActivity() {
             ) {
             }
         })
-
-        viewModel.localDbBooks.observe(this) { it ->
-            val customDropDownAdapter = SpinnerCustomAdapter(this, it)
-            spSelectedBook.adapter = customDropDownAdapter
-        }
     }
 }

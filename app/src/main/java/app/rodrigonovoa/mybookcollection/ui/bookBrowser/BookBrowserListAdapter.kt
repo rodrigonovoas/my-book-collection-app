@@ -27,6 +27,7 @@ class BookBrowserListAdapter(private val booksList: List<BookResponse>)
 
         loadCover(holder, bookItem)
         setTexts(holder, bookItem)
+
         holder.parentView.setOnClickListener {
             onItemClick?.invoke(booksList[position])
         }

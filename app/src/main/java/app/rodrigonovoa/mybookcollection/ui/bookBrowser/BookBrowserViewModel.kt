@@ -49,9 +49,17 @@ class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksReposit
     }
 
     fun addBookToLocalDb(book: BookResponse) {
-        val valueFound = localStoredBooksIds.find { googleId -> book.id.equals(googleId) }
-        if(valueFound != null) { return }
+        if (isBookAlreadyAdded(book)) { return }
 
+        val newBook = createBookEntity(book)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val inserted = bookCollectionRepository.insertBook(newBook)
+            if(inserted > 0) { getIdsFromLocalDb() }
+        }
+    }
+
+    private fun createBookEntity(book: BookResponse): BookEntity {
         val newBook = BookEntity(
             null,
             book.id,
@@ -61,11 +69,13 @@ class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksReposit
             book.volumeInfo.description,
             book.volumeInfo.imageLinks.smallThumbnail
         )
+        return newBook
+    }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val inserted = bookCollectionRepository.insertBook(newBook)
-            if(inserted > 0) { getIdsFromLocalDb() }
-        }
+    private fun isBookAlreadyAdded(book: BookResponse): Boolean {
+        val storedBook = localStoredBooksIds.find { googleId -> book.id.equals(googleId) }
+        if(storedBook != null) { return true }
+        return false
     }
 
 }

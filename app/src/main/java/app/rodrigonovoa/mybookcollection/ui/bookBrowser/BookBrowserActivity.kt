@@ -7,23 +7,25 @@ import android.text.TextWatcher
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
 import app.rodrigonovoa.mybookcollection.data.api.BookResponse
+import app.rodrigonovoa.mybookcollection.databinding.ActivityBookBrowserBinding
 import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BookBrowserActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityBookBrowserBinding
     private val viewModel: BookBrowserViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_book_browser)
+        binding = ActivityBookBrowserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setObservables()
         viewListeneres()
@@ -36,10 +38,9 @@ class BookBrowserActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerviewAdapter(it: List<BookResponse>) {
-        val rc = findViewById<RecyclerView>(R.id.rc_books)
         val adapter = BookBrowserListAdapter(it)
-        rc.layoutManager = LinearLayoutManager(this)
-        rc.adapter = adapter
+        binding.rcBooks.layoutManager = LinearLayoutManager(this)
+        binding.rcBooks.adapter = adapter
 
         adapter.onItemClick = { book ->
             openBookDetailDialog(book)
@@ -51,12 +52,9 @@ class BookBrowserActivity : AppCompatActivity() {
     }
 
     private fun searchListener() {
-        val imvBack = findViewById<ImageView>(R.id.imv_back)
-        val edtSearch = findViewById<EditText>(R.id.edt_search)
+        binding.imvBack.setOnClickListener { finish() }
 
-        imvBack.setOnClickListener { finish() }
-
-        edtSearch.addTextChangedListener(object : TextWatcher {
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 viewModel.getBooksFromApi(s.toString())
             }

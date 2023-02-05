@@ -29,13 +29,24 @@ class MyRecordsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getRecordsFromDb()
+        getRecordsFromLocalDb()
 
+        viewModelObservers()
+        viewListeners()
+    }
+
+    private fun viewListeners() {
+        binding.btnAddRecord.setOnClickListener { openAddRecordActivity() }
+    }
+
+    private fun viewModelObservers() {
         viewModel.storedRecords.observe(viewLifecycleOwner) { it ->
             setRecyclerviewAdapter(it)
         }
+    }
 
-        binding.btnAddRecord.setOnClickListener { openAddRecordActivity() }
+    private fun getRecordsFromLocalDb() {
+        viewModel.getRecordsFromDb()
     }
 
     private fun openAddRecordActivity() {
