@@ -12,7 +12,6 @@ import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksRepository,
                            private val bookCollectionRepository: BookCollectionRepository): ViewModel() {
@@ -51,8 +50,6 @@ class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksReposit
 
     fun addBookToLocalDb(book: BookResponse) {
         val valueFound = localStoredBooksIds.find { googleId -> book.id.equals(googleId) }
-
-        Timber.i("book already added")
         if(valueFound != null) { return }
 
         val newBook = BookEntity(
@@ -66,8 +63,8 @@ class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksReposit
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            val insert = bookCollectionRepository.insertBook(newBook)
-            Timber.i("new book inserted $insert")
+            val inserted = bookCollectionRepository.insertBook(newBook)
+            if(inserted > 0) { getIdsFromLocalDb() }
         }
     }
 

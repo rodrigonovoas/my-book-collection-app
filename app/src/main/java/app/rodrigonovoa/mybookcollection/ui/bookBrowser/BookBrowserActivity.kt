@@ -52,6 +52,7 @@ class BookBrowserActivity : AppCompatActivity() {
 
     private fun searchListener() {
         val edtSearch = findViewById<EditText>(R.id.edt_search)
+
         edtSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 viewModel.getBooksFromApi(s.toString())
