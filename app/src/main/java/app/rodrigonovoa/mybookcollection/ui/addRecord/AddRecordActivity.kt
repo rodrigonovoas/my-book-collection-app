@@ -23,6 +23,7 @@ class AddRecordActivity : AppCompatActivity() {
         val edtSpentHours = findViewById<EditText>(R.id.edt_spent_time_hours)
         val edtSpentMinutes = findViewById<EditText>(R.id.edt_spent_time_minutes)
         val btnAdd = findViewById<Button>(R.id.btn_add)
+        val btnBack = findViewById<Button>(R.id.btn_close)
 
         btnAdd.setOnClickListener {
             if (viewModel.selectedBookId == 0) { return@setOnClickListener }
@@ -30,6 +31,8 @@ class AddRecordActivity : AppCompatActivity() {
                 edtSpentHours.text.toString().toLong(), edtSpentMinutes.text.toString().toLong()
             )
         }
+
+        btnBack.setOnClickListener { finish() }
 
         spSelectedBook.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {

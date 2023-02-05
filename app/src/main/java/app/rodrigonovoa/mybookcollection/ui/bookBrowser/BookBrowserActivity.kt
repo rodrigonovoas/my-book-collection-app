@@ -51,7 +51,10 @@ class BookBrowserActivity : AppCompatActivity() {
     }
 
     private fun searchListener() {
+        val imvBack = findViewById<ImageView>(R.id.imv_back)
         val edtSearch = findViewById<EditText>(R.id.edt_search)
+
+        imvBack.setOnClickListener { finish() }
 
         edtSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
