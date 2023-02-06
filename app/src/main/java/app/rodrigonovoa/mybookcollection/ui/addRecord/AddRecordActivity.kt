@@ -18,9 +18,15 @@ class AddRecordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewListeners()
         observeBooksFromDatabase()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return super.onSupportNavigateUp()
     }
 
     private fun observeBooksFromDatabase() {
@@ -37,8 +43,6 @@ class AddRecordActivity : AppCompatActivity() {
                 binding.edtSpentTimeHours.text.toString().toLong(), binding.edtSpentTimeMinutes.text.toString().toLong()
             )
         }
-
-        binding.btnClose.setOnClickListener { finish() }
 
         // set selected book for viewModel
         binding.spSelectedBook.onItemSelectedListener = object :

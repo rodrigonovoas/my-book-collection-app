@@ -26,9 +26,15 @@ class BookBrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBookBrowserBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setObservables()
         viewListeneres()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return super.onSupportNavigateUp()
     }
 
     private fun setObservables() {
@@ -52,8 +58,6 @@ class BookBrowserActivity : AppCompatActivity() {
     }
 
     private fun searchListener() {
-        binding.imvBack.setOnClickListener { finish() }
-
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 viewModel.getBooksFromApi(s.toString())
