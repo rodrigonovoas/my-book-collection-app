@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
@@ -86,10 +87,11 @@ class BookBrowserActivity : AppCompatActivity() {
         dialog.setContentView(R.layout.dialog_api_book_detail)
         dialog.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT
-        );
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setGravity(Gravity.CENTER);
 
-        val tvClose = dialog.findViewById(R.id.tv_close) as TextView
+        val imvClose = dialog.findViewById(R.id.imv_close) as ImageView
         val imvCover = dialog.findViewById(R.id.imv_book_cover) as ImageView
         val tvTitle = dialog.findViewById(R.id.tv_book_title) as TextView
         val tvAuthor = dialog.findViewById(R.id.tv_book_author) as TextView
@@ -109,7 +111,7 @@ class BookBrowserActivity : AppCompatActivity() {
                 .into(imvCover)
         }
 
-        tvClose.setOnClickListener {
+        imvClose.setOnClickListener {
             dialog.dismiss()
         }
 

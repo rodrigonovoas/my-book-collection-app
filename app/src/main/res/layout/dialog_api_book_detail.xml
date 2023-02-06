@@ -3,26 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:padding="16dp"
     android:background="@drawable/dialog_api_book_background">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="X"
-            android:textSize="24dp"
-            android:textStyle="bold"
-            android:layout_alignParentRight="true" />
+        <ImageView
+            android:id="@+id/imv_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_back" />
 
         <ImageView
             android:id="@+id/imv_book_cover"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="56dp" />
 
@@ -31,9 +29,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imv_book_cover"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:textAlignment="center"
-            android:textSize="24dp"
+            android:fontFamily="@font/qaz"
+            android:textSize="22dp"
             android:textStyle="bold" />
 
         <TextView
@@ -43,6 +42,7 @@
             android:layout_below="@+id/tv_book_title"
             android:layout_marginTop="8dp"
             android:textAlignment="center"
+            android:fontFamily="@font/qaz"
             android:textSize="16dp" />
 
         <TextView
@@ -52,37 +52,32 @@
             android:layout_below="@+id/tv_book_author"
             android:layout_marginTop="8dp"
             android:paddingLeft="4dp"
+            android:visibility="gone"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/tv_book_synopsis_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_book_categories"
-            android:layout_marginTop="8dp"
-            android:paddingLeft="16dp"
-            android:text="SYNOPSIS"
-            android:textAlignment="textStart"
-            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/tv_book_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_book_synopsis_title"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/tv_book_author"
+            android:justificationMode="inter_word"
+            android:layout_marginTop="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textSize="16dp" />
+            android:fontFamily="@font/qaz"
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_book_description"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="@font/qaz"
             android:text="ADD" />
     </RelativeLayout>
 
