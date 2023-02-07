@@ -15,13 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.rodrigonovoa.mybookcollection.R
 import app.rodrigonovoa.mybookcollection.data.api.BookResponse
 import app.rodrigonovoa.mybookcollection.databinding.ActivityBookBrowserBinding
+import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class BookBrowserActivity : AppCompatActivity() {
 
+class BookBrowserActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookBrowserBinding
     private val viewModel: BookBrowserViewModel by viewModel()
+    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +31,22 @@ class BookBrowserActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        bookDetailDialogSetup()
         setObservables()
         viewListeneres()
+    }
+
+    private fun bookDetailDialogSetup() {
+        dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.setContentView(R.layout.dialog_api_book_detail)
+        dialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setGravity(Gravity.CENTER);
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -41,6 +57,16 @@ class BookBrowserActivity : AppCompatActivity() {
     private fun setObservables() {
         viewModel.downloadedBooks.observe(this) { it ->
             setRecyclerviewAdapter(it)
+        }
+
+        viewModel.bookAdded.observe(this) { it ->
+            if (it == BookAddedStatus.ADDED) {
+                dialog.dismiss()
+                SnackBarUtils.showPositiveMessage(binding.root,"Boook added")
+            } else if (it == BookAddedStatus.ALREADY_ADDED) {
+                dialog.dismiss()
+                SnackBarUtils.showNegativeMessage(binding.root,"Boook already added")
+            }
         }
     }
 
@@ -80,17 +106,6 @@ class BookBrowserActivity : AppCompatActivity() {
 
     // TODO: separate into another class
     private fun openBookDetailDialog(book: BookResponse) {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setContentView(R.layout.dialog_api_book_detail)
-        dialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-        dialog.window?.setGravity(Gravity.CENTER);
-
         val imvClose = dialog.findViewById(R.id.imv_close) as ImageView
         val imvCover = dialog.findViewById(R.id.imv_book_cover) as ImageView
         val tvTitle = dialog.findViewById(R.id.tv_book_title) as TextView

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import app.rodrigonovoa.mybookcollection.databinding.ActivityAddRecordBinding
+import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddRecordActivity : AppCompatActivity() {
@@ -22,6 +23,22 @@ class AddRecordActivity : AppCompatActivity() {
 
         viewListeners()
         observeBooksFromDatabase()
+        observeDatabaseInsertResult()
+    }
+
+    private fun observeDatabaseInsertResult() {
+        viewModel.addRecord.observe(this) { it ->
+            if (it == RecordAddedStatus.ADDED) {
+                SnackBarUtils.showPositiveMessage(binding.root, "Record added")
+                finish()
+            } else if (it == RecordAddedStatus.FAIL) {
+                SnackBarUtils.showNegativeMessage(binding.root, "Fail adding record")
+            } else if (it == RecordAddedStatus.NO_TIME_ADDED) {
+                SnackBarUtils.showNegativeMessage(binding.root, "Time not added")
+            } else if (it == RecordAddedStatus.NO_BOOK_ADDED) {
+                SnackBarUtils.showNegativeMessage(binding.root, "Time not added")
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -38,9 +55,13 @@ class AddRecordActivity : AppCompatActivity() {
 
     private fun viewListeners() {
         binding.btnAdd.setOnClickListener {
-            if (viewModel.selectedBookId == 0) { return@setOnClickListener }
+            var spentTimeHours = binding.edtSpentTimeHours.text.toString()
+            var spentTimeMinutes = binding.edtSpentTimeMinutes.text.toString()
+            if (spentTimeHours.isEmpty()) spentTimeHours = "0"
+            if (spentTimeMinutes.isEmpty()) spentTimeMinutes = "0"
+
             viewModel.insertNewRecord(
-                binding.edtSpentTimeHours.text.toString().toLong(), binding.edtSpentTimeMinutes.text.toString().toLong()
+                spentTimeHours.toLong(), spentTimeMinutes.toLong()
             )
         }
 

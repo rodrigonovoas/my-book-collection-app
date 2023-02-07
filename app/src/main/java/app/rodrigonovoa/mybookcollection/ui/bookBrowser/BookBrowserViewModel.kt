@@ -13,12 +13,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
+enum class BookAddedStatus {
+    ADDED, ALREADY_ADDED, NONE
+}
+
 class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksRepository,
                            private val bookCollectionRepository: BookCollectionRepository): ViewModel() {
 
     private val localStoredBooksIds: MutableList<String> = mutableListOf()
     private val _downloadedBooks = MutableLiveData<List<BookResponse>>().apply { postValue(listOf())}
     val downloadedBooks: LiveData<List<BookResponse>> get() = _downloadedBooks
+    val bookAdded = MutableLiveData<BookAddedStatus>().apply { postValue(BookAddedStatus.NONE) }
 
     init {
         getIdsFromLocalDb()
@@ -49,13 +54,19 @@ class BookBrowserViewModel(private val googleBooksRepository: GoogleBooksReposit
     }
 
     fun addBookToLocalDb(book: BookResponse) {
-        if (isBookAlreadyAdded(book)) { return }
+        if (isBookAlreadyAdded(book)) {
+            bookAdded.postValue(BookAddedStatus.ALREADY_ADDED)
+            return
+        }
 
         val newBook = createBookEntity(book)
 
         viewModelScope.launch(Dispatchers.IO) {
             val inserted = bookCollectionRepository.insertBook(newBook)
-            if(inserted > 0) { getIdsFromLocalDb() }
+            if(inserted > 0) {
+                bookAdded.postValue(BookAddedStatus.ADDED)
+                getIdsFromLocalDb()
+            }
         }
     }
 

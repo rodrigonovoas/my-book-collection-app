@@ -12,34 +12,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
+enum class RecordAddedStatus {
+    ADDED, FAIL, NO_TIME_ADDED, NO_BOOK_ADDED, NONE
+}
+
 class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRepository) :
     ViewModel() {
 
     private val _localDbBooks = MutableLiveData<List<BookEntity>>().apply { postValue(listOf()) }
     val localDbBooks: LiveData<List<BookEntity>> get() = _localDbBooks
+    val addRecord = MutableLiveData<RecordAddedStatus>().apply { postValue(RecordAddedStatus.NONE) }
     var selectedBookId: Int = 0
 
     init {
         getBooksFromDatabase()
-    }
-
-    fun insertNewRecord(spentHours: Long, spentMinutes: Long) {
-        val spentTime = getSpentTimeInMillis(spentHours, spentMinutes)
-        val record =
-            RecordEntity(
-                null, DateUtils.getCurrentDateTimeAsTimeStamp(),
-                spentTime, selectedBookId, null
-            )
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val addedRecord = bookCollectionRepository.insertRecord(record)
-        }
-    }
-
-    private fun getSpentTimeInMillis(spentHours: Long, spentMinutes: Long): Long {
-        val minutesInMilis = TimeUnit.MINUTES.toMillis(spentMinutes)
-        val hoursInMilis = TimeUnit.HOURS.toMillis(spentHours)
-        return minutesInMilis + hoursInMilis
     }
 
     private fun getBooksFromDatabase() {
@@ -48,5 +34,48 @@ class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRep
             _localDbBooks.postValue(books)
         }
     }
+
+    fun insertNewRecord(spentHours: Long, spentMinutes: Long) {
+        if (!hasBookBeenSelected()) return
+        val spentTime = getSpentTimeInMillis(spentHours, spentMinutes)
+        if (!hasTimeBeenAdded(spentTime)) return
+        val record =
+            RecordEntity(
+                null, DateUtils.getCurrentDateTimeAsTimeStamp(),
+                spentTime, selectedBookId, null
+            )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val addedRecord = bookCollectionRepository.insertRecord(record)
+            if (addedRecord > 0) {
+                addRecord.postValue(RecordAddedStatus.ADDED)
+            } else {
+                addRecord.postValue(RecordAddedStatus.FAIL)
+            }
+        }
+    }
+
+    private fun hasTimeBeenAdded(spentTime: Long): Boolean {
+        if (spentTime.toInt() == 0) {
+            addRecord.postValue(RecordAddedStatus.NO_TIME_ADDED)
+            return false
+        }
+        return true
+    }
+
+    private fun hasBookBeenSelected(): Boolean {
+        if (selectedBookId <= 0) {
+            addRecord.postValue(RecordAddedStatus.NO_BOOK_ADDED)
+            return false
+        }
+        return true
+    }
+
+    private fun getSpentTimeInMillis(spentHours: Long, spentMinutes: Long): Long {
+        val minutesInMilis = TimeUnit.MINUTES.toMillis(spentMinutes)
+        val hoursInMilis = TimeUnit.HOURS.toMillis(spentHours)
+        return minutesInMilis + hoursInMilis
+    }
+
 
 }
