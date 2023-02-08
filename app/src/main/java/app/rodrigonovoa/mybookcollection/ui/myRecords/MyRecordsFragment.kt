@@ -10,9 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyRecordsBinding
 import app.rodrigonovoa.mybookcollection.ui.addRecord.AddRecordActivity
+import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class MyRecordsFragment : Fragment() {
+
+    companion object {
+        val RESULT_CODE = 123
+        val SHOW_SNACKBAR_CODE = "showRecordInsertedSnackbar"
+    }
 
     private val viewModel: MyRecordsViewModel by viewModel()
     private var _binding: FragmentMyRecordsBinding? = null
@@ -50,11 +57,12 @@ class MyRecordsFragment : Fragment() {
     }
 
     private fun openAddRecordActivity() {
-        requireContext().startActivity(
+        startActivityForResult(
             Intent(
                 context,
                 AddRecordActivity::class.java
-            )
+            ),
+            MyRecordsFragment.RESULT_CODE
         )
     }
 
@@ -62,6 +70,15 @@ class MyRecordsFragment : Fragment() {
         val adapter = MyRecordsListAdapter(records)
         binding.rcRecordsList.layoutManager = LinearLayoutManager(requireContext())
         binding.rcRecordsList.adapter = adapter
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == MyRecordsFragment.RESULT_CODE) {
+            val showSnackbar = data?.getBooleanExtra(MyRecordsFragment.SHOW_SNACKBAR_CODE
+                , false) ?: false
+            if (showSnackbar) SnackBarUtils.showPositiveMessage(binding.root, "Record added")
+        }
     }
 
     override fun onDestroyView() {

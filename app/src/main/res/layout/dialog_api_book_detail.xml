@@ -72,6 +72,7 @@
             android:id="@+id/btn_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/common_button_bg"
             android:layout_below="@+id/tv_book_description"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"

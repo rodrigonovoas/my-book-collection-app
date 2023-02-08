@@ -1,5 +1,6 @@
 package app.rodrigonovoa.mybookcollection.ui.addRecord
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,8 +8,10 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import app.rodrigonovoa.mybookcollection.databinding.ActivityAddRecordBinding
+import app.rodrigonovoa.mybookcollection.ui.myRecords.MyRecordsFragment
 import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class AddRecordActivity : AppCompatActivity() {
 
@@ -29,7 +32,7 @@ class AddRecordActivity : AppCompatActivity() {
     private fun observeDatabaseInsertResult() {
         viewModel.addRecord.observe(this) { it ->
             if (it == RecordAddedStatus.ADDED) {
-                SnackBarUtils.showPositiveMessage(binding.root, "Record added")
+                setShowRecordInsertedSnackbar()
                 finish()
             } else if (it == RecordAddedStatus.FAIL) {
                 SnackBarUtils.showNegativeMessage(binding.root, "Fail adding record")
@@ -39,6 +42,12 @@ class AddRecordActivity : AppCompatActivity() {
                 SnackBarUtils.showNegativeMessage(binding.root, "Time not added")
             }
         }
+    }
+
+    private fun setShowRecordInsertedSnackbar() {
+        val intent = Intent()
+        intent.putExtra(MyRecordsFragment.SHOW_SNACKBAR_CODE, true)
+        setResult(MyRecordsFragment.RESULT_CODE, intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {
