@@ -48,6 +48,18 @@ class BookCollectionRepository(context: Context, scope: CoroutineScope) {
         return recordDAO.getRecordById(id)
     }
 
+    fun getRecordsByBookId(id: Int): List<RecordAndBookEntity> {
+        return recordDAO.getRecordsByBookId(id)
+    }
+
+    fun getRecordsByBookIdAndDay(bookId: Int, day: Long): List<RecordAndBookEntity> {
+        return recordDAO.getRecordsByBookIdAndDay(bookId, day)
+    }
+
+    fun getRecordsByBookIdAndInterval(bookId: Int, firstDay: Long, lastDay: Long): List<RecordAndBookEntity> {
+        return recordDAO.getRecordsByBookIdAndInterval(bookId, firstDay, lastDay)
+    }
+
     fun insertRecord(record: RecordEntity): Long {
         return recordDAO.insertRecord(record)
     }

@@ -24,6 +24,10 @@ object DateUtils {
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)))
     }
 
+    fun fromMillisecondsToHours(time: Long) : Float {
+        return (time / 1000 / 60).toFloat() / 60
+    }
+
     fun getCurrentDateTimeAsTimeStamp(): Long {
         return Calendar.getInstance().timeInMillis
     }

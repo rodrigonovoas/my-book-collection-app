@@ -73,4 +73,7 @@ dependencies {
 
     // material design for ui
     implementation 'com.google.android.material:material:1.8.0'
+
+    // chart
+    implementation "com.patrykandpatrick.vico:views:1.6.3"
 }
