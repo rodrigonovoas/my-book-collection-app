@@ -28,6 +28,7 @@ class MyStatsViewModel(val bookCollectionRepository: BookCollectionRepository) :
     }
 
     fun getCurrentWeekHoursByBookId(bookId: Int) {
+        hoursPerWeekAux.clear()
         runBlocking {
             val mondayJob = getHoursForMonday(bookId)
             mondayJob.join()

@@ -59,6 +59,7 @@ class MyStatsFragment : Fragment() {
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
+                binding.chart.setModel(entryModelOf(listOf()))
                 val bookId = viewModel.localDbBooks.value?.get(position)?.id ?: 0
                 viewModel.getCurrentWeekHoursByBookId(bookId)
             }
