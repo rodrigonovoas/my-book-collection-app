@@ -27,71 +27,78 @@ class MyStatsViewModel(val bookCollectionRepository: BookCollectionRepository) :
         getBooksFromDatabase()
     }
 
-    fun getCurrentWeekHoursByBookId(bookId: Int) {
+    fun getCurrentWeekHoursByBookId(calendar: Calendar,bookId: Int) {
         hoursPerWeekAux.clear()
         runBlocking {
-            val mondayJob = getHoursForMonday(bookId)
+            val mondayJob = getHoursForMonday(calendar, bookId)
             mondayJob.join()
-            val tuesdayJob = getHoursForTuesday(bookId)
+            val tuesdayJob = getHoursForTuesday(calendar, bookId)
             tuesdayJob.join()
-            val wednesdayJob = getHoursForWednesday(bookId)
+            val wednesdayJob = getHoursForWednesday(calendar, bookId)
             wednesdayJob.join()
-            val thursdayJob = getHoursForThursday(bookId)
+            val thursdayJob = getHoursForThursday(calendar, bookId)
             thursdayJob.join()
-            val fridayJob = getHoursForFriday(bookId)
+            val fridayJob = getHoursForFriday(calendar, bookId)
             fridayJob.join()
-            val saturdayJob = getHoursForSaturday(bookId)
+            val saturdayJob = getHoursForSaturday(calendar, bookId)
             saturdayJob.join()
-            val sundayJob = getHoursForSunday(bookId)
+            val sundayJob = getHoursForSunday(calendar, bookId)
             sundayJob.join()
         }
     }
 
-    private fun getHoursForMonday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.MONDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.MONDAY)
+    private fun getHoursForMonday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
 
-    private fun getHoursForTuesday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.TUESDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.TUESDAY)
+    private fun getHoursForTuesday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY)
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
 
-    private fun getHoursForWednesday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.WEDNESDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.WEDNESDAY)
+    private fun getHoursForWednesday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY)
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
 
-    private fun getHoursForThursday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.THURSDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.THURSDAY)
+    private fun getHoursForThursday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
 
-    private fun getHoursForFriday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.FRIDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.FRIDAY)
+    private fun getHoursForFriday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY)
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
 
-    private fun getHoursForSaturday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.SATURDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.SATURDAY)
+    private fun getHoursForSaturday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
 
-    private fun getHoursForSunday(bookId: Int): Job {
-        val startOfTheDay = getStartOfTheDayInMillis(Calendar.SUNDAY)
-        val endOfTheDay = getEndOfTheDayInMillis(Calendar.SUNDAY)
+    private fun getHoursForSunday(calendar: Calendar, bookId: Int): Job {
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+        val startOfTheDay = getStartOfTheDayInMillis(calendar)
+        val endOfTheDay = getEndOfTheDayInMillis(calendar)
 
         return getHoursFromLocalDb(bookId, startOfTheDay, endOfTheDay)
     }
@@ -111,28 +118,24 @@ class MyStatsViewModel(val bookCollectionRepository: BookCollectionRepository) :
         }
     }
 
-    private fun getEndOfTheDayInMillis(day: Int): Long {
-        val calendarFinish: Calendar = Calendar.getInstance(Locale.FRENCH)
-        calendarFinish.set(Calendar.DAY_OF_WEEK, day)
-        calendarFinish.set(Calendar.HOUR_OF_DAY, 23);
-        calendarFinish.set(Calendar.MINUTE, 59);
-        calendarFinish.set(Calendar.SECOND, 59);
-        calendarFinish.set(Calendar.MILLISECOND, 999);
+    private fun getEndOfTheDayInMillis(calendar: Calendar): Long {
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
 
-        val endOfTheDay = calendarFinish.timeInMillis
+        val endOfTheDay = calendar.timeInMillis
 
         return endOfTheDay
     }
 
-    private fun getStartOfTheDayInMillis(day: Int): Long {
-        val calendarInit: Calendar = Calendar.getInstance(Locale.FRENCH)
-        calendarInit.set(Calendar.DAY_OF_WEEK, day)
-        calendarInit.set(Calendar.HOUR_OF_DAY, 0);
-        calendarInit.set(Calendar.MINUTE, 0);
-        calendarInit.set(Calendar.SECOND, 0);
-        calendarInit.set(Calendar.MILLISECOND, 0);
+    private fun getStartOfTheDayInMillis(calendar: Calendar): Long {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
-        val startOfTheDay = calendarInit.timeInMillis
+        val startOfTheDay = calendar.timeInMillis
 
         return startOfTheDay
     }

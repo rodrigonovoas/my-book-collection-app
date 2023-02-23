@@ -31,4 +31,12 @@ object DateUtils {
     fun getCurrentDateTimeAsTimeStamp(): Long {
         return Calendar.getInstance().timeInMillis
     }
+
+    fun getCurrentDateAsString(): String {
+        val time = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        val current = formatter.format(time)
+
+        return current
+    }
 }
