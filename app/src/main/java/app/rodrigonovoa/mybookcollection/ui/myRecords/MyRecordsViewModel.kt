@@ -9,15 +9,19 @@ import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRepository) :
     ViewModel() {
     private val _storedRecords = MutableLiveData<List<Record>>().apply { postValue(listOf()) }
     val storedRecords: LiveData<List<Record>> get() = _storedRecords
 
-    fun getRecordsFromDb() {
+    fun getRecordsFromInterval(calendar: Calendar) {
+        val startDay = getStartOfTheDayInMillis(calendar)
+        val endDay = getEndOfTheDayInMillis(calendar)
+
         viewModelScope.launch(Dispatchers.IO) {
-            val storedRecords = bookCollectionRepository.getAllRecords()
+            val storedRecords = bookCollectionRepository.getRecordsFromInterval(startDay, endDay)
             val mappedRecords = mapRecords(storedRecords)
             _storedRecords.postValue(mappedRecords)
         }
@@ -37,5 +41,27 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
         }
 
         return storedRecords.toList()
+    }
+
+    private fun getEndOfTheDayInMillis(calendar: Calendar): Long {
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+
+        val endOfTheDay = calendar.timeInMillis
+
+        return endOfTheDay
+    }
+
+    private fun getStartOfTheDayInMillis(calendar: Calendar): Long {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        val startOfTheDay = calendar.timeInMillis
+
+        return startOfTheDay
     }
 }

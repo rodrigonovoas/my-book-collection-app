@@ -39,4 +39,12 @@ object DateUtils {
 
         return current
     }
+
+    fun fromCalendarToString(calendar: Calendar): String {
+        val time = calendar.time
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        val current = formatter.format(time)
+
+        return current
+    }
 }

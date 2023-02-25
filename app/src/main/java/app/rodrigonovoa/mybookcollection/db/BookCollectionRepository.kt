@@ -52,12 +52,12 @@ class BookCollectionRepository(context: Context, scope: CoroutineScope) {
         return recordDAO.getRecordsByBookId(id)
     }
 
-    fun getRecordsByBookIdAndDay(bookId: Int, day: Long): List<RecordAndBookEntity> {
-        return recordDAO.getRecordsByBookIdAndDay(bookId, day)
+    fun getRecordsByBookIdAndInterval(bookId: Int, firstDay: Long, lastDay: Long): List<RecordEntity> {
+        return recordDAO.getRecordsByBookIdAndInterval(bookId, firstDay, lastDay)
     }
 
-    fun getRecordsByBookIdAndInterval(bookId: Int, firstDay: Long, lastDay: Long): List<RecordAndBookEntity> {
-        return recordDAO.getRecordsByBookIdAndInterval(bookId, firstDay, lastDay)
+    fun getRecordsFromInterval(firstDay: Long, lastDay: Long): List<RecordAndBookEntity> {
+        return recordDAO.getRecordsFromInterval(firstDay, lastDay)
     }
 
     fun insertRecord(record: RecordEntity): Long {
