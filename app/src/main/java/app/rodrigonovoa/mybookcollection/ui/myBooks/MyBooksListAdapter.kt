@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.rodrigonovoa.mybookcollection.R
@@ -11,6 +12,7 @@ import app.rodrigonovoa.mybookcollection.data.model.Book
 import com.bumptech.glide.Glide
 
 class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapter<MyBooksListAdapter.ViewHolder>() {
+    var onItemClick: ((Book) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -23,6 +25,10 @@ class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapt
 
         loadCover(holder, bookItem)
         setTexts(holder, bookItem)
+
+        holder.rlParentview.setOnClickListener {
+            onItemClick?.invoke(booksList[position])
+        }
     }
 
     private fun setTexts(
@@ -51,5 +57,6 @@ class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapt
         val imvCover: ImageView = itemView.findViewById(R.id.imv_book_cover)
         val tvTitle: TextView = itemView.findViewById(R.id.tv_book_name)
         val tvAuthor: TextView = itemView.findViewById(R.id.tv_book_author)
+        val rlParentview: RelativeLayout = itemView.findViewById(R.id.rl_parentview)
     }
 }

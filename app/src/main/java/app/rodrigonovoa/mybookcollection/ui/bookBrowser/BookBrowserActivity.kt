@@ -1,29 +1,21 @@
 package app.rodrigonovoa.mybookcollection.ui.bookBrowser
 
-import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
-import android.view.Window
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.rodrigonovoa.mybookcollection.R
 import app.rodrigonovoa.mybookcollection.data.api.BookResponse
 import app.rodrigonovoa.mybookcollection.databinding.ActivityBookBrowserBinding
+import app.rodrigonovoa.mybookcollection.ui.dialogs.ApiBookDetailDialog
 import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
-import com.bumptech.glide.Glide
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class BookBrowserActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookBrowserBinding
     private val viewModel: BookBrowserViewModel by viewModel()
-    private lateinit var dialog: Dialog
+    private lateinit var apiBookDetailDialog: ApiBookDetailDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,22 +23,14 @@ class BookBrowserActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        bookDetailDialogSetup()
+        apiBookDetailDialog = ApiBookDetailDialog(this)
+
+        apiBookDetailDialog.onItemClick  = { book ->
+            viewModel.addBookToLocalDb(book)
+        }
+
         setObservables()
         viewListeneres()
-    }
-
-    private fun bookDetailDialogSetup() {
-        dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.setContentView(R.layout.dialog_api_book_detail)
-        dialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
-        )
-        dialog.window?.setGravity(Gravity.CENTER);
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -61,10 +45,10 @@ class BookBrowserActivity : AppCompatActivity() {
 
         viewModel.bookAdded.observe(this) { it ->
             if (it == BookAddedStatus.ADDED) {
-                dialog.dismiss()
+                apiBookDetailDialog.close()
                 SnackBarUtils.showPositiveMessage(binding.root,"Boook added")
             } else if (it == BookAddedStatus.ALREADY_ADDED) {
-                dialog.dismiss()
+                apiBookDetailDialog.close()
                 SnackBarUtils.showNegativeMessage(binding.root,"Boook already added")
             }
         }
@@ -76,7 +60,7 @@ class BookBrowserActivity : AppCompatActivity() {
         binding.rcBooks.adapter = adapter
 
         adapter.onItemClick = { book ->
-            openBookDetailDialog(book)
+            apiBookDetailDialog.openBookDetailDialog(book)
         }
     }
 
@@ -102,38 +86,5 @@ class BookBrowserActivity : AppCompatActivity() {
             ) {
             }
         })
-    }
-
-    // TODO: separate into another class
-    private fun openBookDetailDialog(book: BookResponse) {
-        val imvClose = dialog.findViewById(R.id.imv_close) as ImageView
-        val imvCover = dialog.findViewById(R.id.imv_book_cover) as ImageView
-        val tvTitle = dialog.findViewById(R.id.tv_book_title) as TextView
-        val tvAuthor = dialog.findViewById(R.id.tv_book_author) as TextView
-        val tvDescription = dialog.findViewById(R.id.tv_book_description) as TextView
-        val tvCategories = dialog.findViewById(R.id.tv_book_categories) as TextView
-        val addBtn = dialog.findViewById(R.id.btn_add) as Button
-
-        tvTitle.setText(book.volumeInfo.title)
-        tvDescription.setText(book.volumeInfo.description)
-        tvAuthor.setText(book.volumeInfo.authors?.get(0) ?: "")
-        tvCategories.setText(book.volumeInfo.categories?.get(0) ?: "")
-
-        if (book.volumeInfo.imageLinks != null) {
-            Glide.with(imvCover)
-                .load(book.volumeInfo.imageLinks.smallThumbnail)
-                .placeholder(R.drawable.ic_cover_not_found)
-                .into(imvCover)
-        }
-
-        imvClose.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        addBtn.setOnClickListener {
-            viewModel.addBookToLocalDb(book)
-        }
-
-        dialog.show()
     }
 }

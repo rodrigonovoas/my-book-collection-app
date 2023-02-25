@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyBooksBinding
 import app.rodrigonovoa.mybookcollection.ui.bookBrowser.BookBrowserActivity
+import app.rodrigonovoa.mybookcollection.ui.dialogs.DbBookDetailDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyBooksFragment : Fragment() {
@@ -16,6 +17,7 @@ class MyBooksFragment : Fragment() {
     private val viewModel: MyBooksViewModel by viewModel()
     private var _binding: FragmentMyBooksBinding? = null
     private val binding get() = _binding!!
+    private lateinit var apiBookDetailDialog: DbBookDetailDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +30,8 @@ class MyBooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        apiBookDetailDialog = DbBookDetailDialog(requireContext())
 
         getBooksFromLocalDb()
         viewListeners()
@@ -54,6 +58,9 @@ class MyBooksFragment : Fragment() {
             val adapter = MyBooksListAdapter(it)
             binding.rcBookList.layoutManager = GridLayoutManager(requireContext(), 3)
             binding.rcBookList.adapter = adapter
+            adapter.onItemClick = {
+                apiBookDetailDialog.openBookDetailDialog(it)
+            }
         }
     }
 
