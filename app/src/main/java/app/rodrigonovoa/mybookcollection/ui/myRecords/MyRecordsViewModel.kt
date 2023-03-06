@@ -16,6 +16,12 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
     private val _storedRecords = MutableLiveData<List<Record>>().apply { postValue(listOf()) }
     val storedRecords: LiveData<List<Record>> get() = _storedRecords
 
+    private val _totalHours = MutableLiveData<Long>().apply { postValue(0L) }
+    val totalHours: LiveData<Long> get() = _totalHours
+
+    private val _totalRecords = MutableLiveData<Int>().apply { postValue(0) }
+    val totalRecords: LiveData<Int> get() = _totalRecords
+
     fun getRecordsFromInterval(calendar: Calendar) {
         val startDay = getStartOfTheDayInMillis(calendar)
         val endDay = getEndOfTheDayInMillis(calendar)
@@ -27,13 +33,25 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
         }
     }
 
+    fun getTotalHoursFromBookId(bookId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val records = bookCollectionRepository.getRecordsByBookId(bookId)
+            var totalHours = 0L
+            for (record in records) {
+                totalHours += (record.spentTime ?: 0L)
+            }
+            _totalHours.postValue(totalHours)
+            _totalRecords.postValue(records.size)
+        }
+    }
+
     private fun mapRecords(records: List<RecordAndBookEntity>): List<Record> {
         val storedRecords = mutableListOf<Record>()
 
         for (record in records) {
             storedRecords.add(
                 Record(
-                    record.id.toInt(), record.dateTime ?: 0, record.name ?: "",
+                    record.id.toInt(), record.dateTime ?: 0, record.bookId?.toInt() ?: 0,record.name ?: "",
                     record.author ?: "", record.imageUrl ?: "",
                     record.spentTime ?: 0
                 )

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyRecordsBinding
 import app.rodrigonovoa.mybookcollection.ui.addRecord.AddRecordActivity
+import app.rodrigonovoa.mybookcollection.ui.dialogs.RecordDetailDialog
 import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,6 +29,7 @@ class MyRecordsFragment : Fragment() {
     private var _binding: FragmentMyRecordsBinding? = null
     private val binding get() = _binding!!
     private var dateCalendar: Calendar? = null
+    private lateinit var detailDialog: RecordDetailDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +43,7 @@ class MyRecordsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        detailDialog = RecordDetailDialog(requireContext())
         setCurrentDayInTextView()
         viewModelObservers()
         viewListeners()
@@ -62,13 +65,20 @@ class MyRecordsFragment : Fragment() {
 
     private fun viewListeners() {
         binding.btnAddRecord.setOnClickListener { openAddRecordActivity() }
-
         binding.tvRecorsDate.setOnClickListener { openCalendar() }
     }
 
     private fun viewModelObservers() {
         viewModel.storedRecords.observe(viewLifecycleOwner) { it ->
             setRecyclerviewAdapter(it)
+        }
+
+        viewModel.totalHours.observe(viewLifecycleOwner) { it ->
+            if(detailDialog != null) detailDialog.setTotalHours(it)
+        }
+
+        viewModel.totalRecords.observe(viewLifecycleOwner) { it ->
+            if(detailDialog != null) detailDialog.setTotalRecords(it)
         }
     }
 
@@ -95,6 +105,11 @@ class MyRecordsFragment : Fragment() {
         val adapter = MyRecordsListAdapter(records)
         binding.rcRecordsList.layoutManager = LinearLayoutManager(requireContext())
         binding.rcRecordsList.adapter = adapter
+
+        adapter.onItemClick = {
+            detailDialog.openRecordDetailDialog(it)
+            viewModel.getTotalHoursFromBookId(it.bookId)
+        }
     }
 
     private fun openCalendar() {

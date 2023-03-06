@@ -15,13 +15,13 @@ interface RecordDAO {
     @Query("select record.id, book.name as book_name, book.imageUrl as book_image_url from record left join book on book.id = record.bookId where record.id = :id")
     fun getRecordById(id: Int): RecordAndBookEntity
 
-    @Query("select record.id, record.dateTime, record.spentTime, book.name, book.author, book.imageUrl from record left join book on book.id = record.bookId where record.bookId = :bookId")
+    @Query("select record.id, record.dateTime, record.spentTime, book.id AS bookId, book.name, book.author, book.imageUrl from record left join book on book.id = record.bookId where record.bookId = :bookId")
     fun getRecordsByBookId(bookId: Int): List<RecordAndBookEntity>
 
     @Query("select * from record where bookId = :bookId and dateTime between :firstDay and :lastDay")
     fun getRecordsByBookIdAndInterval(bookId:Int, firstDay: Long, lastDay: Long): List<RecordEntity>
 
-    @Query("select record.id, record.dateTime, record.spentTime, book.name, book.author, book.imageUrl from record left join book on book.id = record.bookId where record.dateTime between :firstDay and :lastDay")
+    @Query("select record.id, record.dateTime, record.spentTime, book.id AS bookId, book.name, book.author, book.imageUrl from record left join book on book.id = record.bookId where record.dateTime between :firstDay and :lastDay")
     fun getRecordsFromInterval(firstDay: Long, lastDay: Long): List<RecordAndBookEntity>
 
     @Update
