@@ -6,17 +6,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import app.rodrigonovoa.mybookcollection.data.db.BookEntity
-import app.rodrigonovoa.mybookcollection.data.db.OpinionEntity
 import app.rodrigonovoa.mybookcollection.data.db.RecordEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(BookEntity::class, RecordEntity::class, OpinionEntity::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(BookEntity::class, RecordEntity::class), version = 1, exportSchema = false)
 abstract class BookCollectionDatabase : RoomDatabase() {
 
     abstract fun bookDao(): BookDAO
     abstract fun recordDao(): RecordDAO
-    abstract fun opinionDao(): OpinionDAO
 
     private class BookCollectionDatabaseCallback(
         private val scope: CoroutineScope

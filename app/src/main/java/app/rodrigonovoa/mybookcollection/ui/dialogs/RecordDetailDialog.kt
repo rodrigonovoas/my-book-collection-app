@@ -14,6 +14,7 @@ import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import com.bumptech.glide.Glide
 
 class RecordDetailDialog(val context: Context) {
+    var onItemClick: ((Record, String) -> Unit)? = null
     private lateinit var dialog: Dialog
 
     init {
@@ -30,6 +31,7 @@ class RecordDetailDialog(val context: Context) {
 
         tvTitle.setText(record.bookName)
         tvAuthor.setText(record.bookAuthor)
+        edtComment.setText(record.comment)
 
         if (record.bookImageUrl.isNotEmpty()) {
             Glide.with(imvCover)
@@ -43,7 +45,14 @@ class RecordDetailDialog(val context: Context) {
         }
 
         imvEditComment.setOnClickListener {
-            edtComment.isEnabled = true
+            if(edtComment.isEnabled) {
+                imvEditComment.setImageDrawable(context.getDrawable(R.drawable.ic_edit_comment))
+                onItemClick?.invoke(record, edtComment.text.toString())
+                edtComment.isEnabled = false
+            } else {
+                imvEditComment.setImageDrawable(context.getDrawable(R.drawable.ic_save_comment))
+                edtComment.isEnabled = true
+            }
         }
 
         dialog.show()

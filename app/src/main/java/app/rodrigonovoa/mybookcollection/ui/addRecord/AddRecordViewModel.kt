@@ -42,7 +42,7 @@ class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRep
         val record =
             RecordEntity(
                 null, DateUtils.getCurrentDateTimeAsTimeStamp(),
-                spentTime, selectedBookId, null
+                spentTime, "", selectedBookId
             )
 
         viewModelScope.launch(Dispatchers.IO) {

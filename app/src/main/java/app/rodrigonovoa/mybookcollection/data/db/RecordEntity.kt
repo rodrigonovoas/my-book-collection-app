@@ -10,10 +10,6 @@ import androidx.room.PrimaryKey
     ForeignKey(entity = BookEntity::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("bookId"),
-        onDelete = ForeignKey.CASCADE),
-    ForeignKey(entity = OpinionEntity::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("opinionId"),
         onDelete = ForeignKey.CASCADE)
 ))
 
@@ -21,6 +17,6 @@ data class RecordEntity(
     @PrimaryKey(autoGenerate = true) var id: Int? = null,
     var dateTime: Long,
     var spentTime: Long,
-    var bookId: Int,
-    var opinionId: Int? = null
+    var comment: String,
+    var bookId: Int
 )

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.rodrigonovoa.mybookcollection.data.db.RecordEntity
 import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyRecordsBinding
 import app.rodrigonovoa.mybookcollection.ui.addRecord.AddRecordActivity
@@ -44,6 +45,13 @@ class MyRecordsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         detailDialog = RecordDetailDialog(requireContext())
+
+        detailDialog.onItemClick = { record, comment ->
+            val recordEntity =
+                RecordEntity(record.id, record.dateTime, record.spentTime, record.comment, record.bookId)
+            updateCommentFromDialog(recordEntity, comment)
+        }
+
         setCurrentDayInTextView()
         viewModelObservers()
         viewListeners()
@@ -130,6 +138,10 @@ class MyRecordsFragment : Fragment() {
         }, year, month, day)
 
         dpd.show()
+    }
+
+    private fun updateCommentFromDialog(record: RecordEntity, comment: String) {
+        viewModel.updateRecordComment(record, comment)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

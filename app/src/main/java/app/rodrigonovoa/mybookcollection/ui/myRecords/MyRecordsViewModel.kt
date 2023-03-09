@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.rodrigonovoa.mybookcollection.data.db.RecordAndBookEntity
+import app.rodrigonovoa.mybookcollection.data.db.RecordEntity
 import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,14 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
         }
     }
 
+    fun updateRecordComment(record: RecordEntity, comment: String) {
+        val recordToUpdate = record
+        recordToUpdate.comment = comment
+        viewModelScope.launch(Dispatchers.IO) {
+            bookCollectionRepository.updateRecord(recordToUpdate)
+        }
+    }
+
     private fun mapRecords(records: List<RecordAndBookEntity>): List<Record> {
         val storedRecords = mutableListOf<Record>()
 
@@ -53,7 +62,7 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
                 Record(
                     record.id.toInt(), record.dateTime ?: 0, record.bookId?.toInt() ?: 0,record.name ?: "",
                     record.author ?: "", record.imageUrl ?: "",
-                    record.spentTime ?: 0
+                    record.spentTime ?: 0, record.comment ?: ""
                 )
             )
         }
