@@ -35,13 +35,13 @@ class AddRecordViewModel(private val bookCollectionRepository: BookCollectionRep
         }
     }
 
-    fun insertNewRecord(spentHours: Long, spentMinutes: Long) {
+    fun insertNewRecord(date: Long, spentHours: Long, spentMinutes: Long) {
         if (!hasBookBeenSelected()) return
         val spentTime = getSpentTimeInMillis(spentHours, spentMinutes)
         if (!hasTimeBeenAdded(spentTime)) return
         val record =
             RecordEntity(
-                null, DateUtils.getCurrentDateTimeAsTimeStamp(),
+                null, date,
                 spentTime, "", selectedBookId
             )
 

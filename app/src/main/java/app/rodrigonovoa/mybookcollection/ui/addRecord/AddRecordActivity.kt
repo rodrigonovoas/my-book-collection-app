@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import app.rodrigonovoa.mybookcollection.databinding.ActivityAddRecordBinding
 import app.rodrigonovoa.mybookcollection.ui.myRecords.MyRecordsFragment
+import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -17,6 +18,7 @@ class AddRecordActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddRecordBinding
     private val viewModel: AddRecordViewModel by viewModel()
+    private var recordDate = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,9 +26,16 @@ class AddRecordActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        setRecordDate()
         viewListeners()
         observeBooksFromDatabase()
         observeDatabaseInsertResult()
+    }
+
+    private fun setRecordDate() {
+        val date = intent.getLongExtra("recordDay", 0L)
+        recordDate = date
+        if(date != 0L) binding.tvRecordDate.setText(DateUtils.fromTimestampToDateString(date))
     }
 
     private fun observeDatabaseInsertResult() {
@@ -70,7 +79,7 @@ class AddRecordActivity : AppCompatActivity() {
             if (spentTimeMinutes.isEmpty()) spentTimeMinutes = "0"
 
             viewModel.insertNewRecord(
-                spentTimeHours.toLong(), spentTimeMinutes.toLong()
+                recordDate, spentTimeHours.toLong(), spentTimeMinutes.toLong()
             )
         }
 

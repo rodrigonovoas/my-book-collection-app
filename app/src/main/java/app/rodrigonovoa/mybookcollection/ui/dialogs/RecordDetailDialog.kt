@@ -74,7 +74,7 @@ class RecordDetailDialog(val context: Context) {
     fun setTotalHours(totalHours: Long) {
         val tvTotalHours = dialog.findViewById(R.id.tv_total_hours) as TextView
         var totalHoursString = "0"
-        if (totalHours > 0) totalHoursString = DateUtils.fromMillisecondsToDateString(totalHours)
+        if (totalHours > 0) totalHoursString = DateUtils.fromMillisecondsToTimeString(totalHours)
         if (dialog != null) tvTotalHours.setText("Total hours: " + totalHoursString)
     }
 

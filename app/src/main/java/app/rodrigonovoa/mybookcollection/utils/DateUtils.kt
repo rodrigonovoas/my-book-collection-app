@@ -8,14 +8,14 @@ object DateUtils {
     fun fromTimestampToDateString(time: Long): String {
         try {
             val sdf = SimpleDateFormat("dd/MM/yyyy")
-            val netDate = Date(time * 1000)
+            val netDate = Date(time)
             return sdf.format(netDate)
         } catch (e: Exception) {
             return e.toString()
         }
     }
 
-    fun fromMillisecondsToDateString(time: Long) : String {
+    fun fromMillisecondsToTimeString(time: Long) : String {
         return String.format("%02d:%02d:%02d",
             TimeUnit.MILLISECONDS.toHours(time),
             TimeUnit.MILLISECONDS.toMinutes(time) -

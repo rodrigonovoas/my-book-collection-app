@@ -7,6 +7,15 @@
     android:padding="8dp"
     tools:context=".ui.addRecord.AddRecordActivity">
 
+    <TextView
+        android:id="@+id/tv_record_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DATE"
+        android:textSize="14dp"
+        android:layout_marginLeft="6dp"
+        />
+
     <LinearLayout
         android:id="@+id/ll_selected_book"
         android:layout_width="match_parent"
@@ -15,6 +24,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
+        android:layout_below="@+id/tv_record_date"
         android:orientation="vertical"
         android:background="@drawable/add_record_section_bg">
 

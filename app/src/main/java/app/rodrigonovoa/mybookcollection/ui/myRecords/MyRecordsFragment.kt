@@ -100,12 +100,16 @@ class MyRecordsFragment : Fragment() {
     }
 
     private fun openAddRecordActivity() {
+        val i = Intent(context, AddRecordActivity::class.java)
+
+        if(dateCalendar != null) {
+            i.putExtra("recordDay", dateCalendar?.timeInMillis)
+        } else {
+            i.putExtra("recordDay", DateUtils.getCurrentDateTimeAsTimeStamp())
+        }
+
         startActivityForResult(
-            Intent(
-                context,
-                AddRecordActivity::class.java
-            ),
-            MyRecordsFragment.RESULT_CODE
+           i, MyRecordsFragment.RESULT_CODE
         )
     }
 

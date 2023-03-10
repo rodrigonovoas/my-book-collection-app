@@ -36,7 +36,7 @@ class MyRecordsListAdapter(private val recordsList: List<Record>) : RecyclerView
         recordItem: Record
     ) {
         holder.tvBookTitleAndAuthor.text = recordItem.bookName + " (${recordItem.bookAuthor})"
-        holder.tvBookSpentTime.text = DateUtils.fromMillisecondsToDateString(recordItem.spentTime)
+        holder.tvBookSpentTime.text = DateUtils.fromMillisecondsToTimeString(recordItem.spentTime)
     }
 
     private fun loadCover(
