@@ -33,9 +33,13 @@ class MyBooksFragment : Fragment() {
 
         apiBookDetailDialog = DbBookDetailDialog(requireContext())
 
-        getBooksFromLocalDb()
         viewListeners()
         viewModelObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getBooksFromLocalDb()
     }
 
     private fun getBooksFromLocalDb() {
