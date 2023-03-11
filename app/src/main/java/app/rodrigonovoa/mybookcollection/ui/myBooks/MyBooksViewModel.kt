@@ -24,7 +24,7 @@ class MyBooksViewModel(val localDbRepository: BookCollectionRepository) : ViewMo
     private fun mapBooks(bookList: List<BookEntity>): List<Book> {
         var books = mutableListOf<Book>()
         for (book in bookList) {
-            books.add(Book(book.name, book.author, book.description, book.imageUrl))
+            books.add(Book(book.name, book.author, book.description ?: "", book.imageUrl))
         }
         return books
     }

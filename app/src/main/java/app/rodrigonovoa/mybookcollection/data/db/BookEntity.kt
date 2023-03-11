@@ -10,6 +10,6 @@ data class BookEntity(
     var dateTime: Long,
     var name: String,
     var author: String,
-    var description: String,
+    var description: String?,
     var imageUrl: String
 )

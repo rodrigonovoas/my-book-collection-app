@@ -31,7 +31,7 @@ class DbBookDetailDialog(val context: Context) {
         val addBtn = dialog.findViewById(R.id.btn_add) as Button
 
         tvTitle.setText(book.name)
-        tvDescription.setText(book.description)
+        tvDescription.setText(book.description ?: "")
         tvAuthor.setText(book.author)
         tvCategories.visibility = View.GONE
         addBtn.visibility = View.GONE
