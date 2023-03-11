@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 
 class MyRecordsListAdapter(private val recordsList: List<Record>) : RecyclerView.Adapter<MyRecordsListAdapter.ViewHolder>() {
     var onItemClick: ((Record) -> Unit)? = null
+    var onLongItemClick: ((Long) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,7 +28,12 @@ class MyRecordsListAdapter(private val recordsList: List<Record>) : RecyclerView
         loadCover(holder, recordItem)
 
         holder.rlParentview.setOnClickListener {
-            onItemClick?.invoke(recordsList[position])
+            onItemClick?.invoke(recordItem)
+        }
+
+        holder.rlParentview.setOnLongClickListener {
+            onLongItemClick?.invoke(recordItem.id.toLong())
+            return@setOnLongClickListener true
         }
     }
 

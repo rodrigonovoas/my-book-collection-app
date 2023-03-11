@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyBooksBinding
 import app.rodrigonovoa.mybookcollection.ui.bookBrowser.BookBrowserActivity
 import app.rodrigonovoa.mybookcollection.ui.dialogs.DbBookDetailDialog
+import app.rodrigonovoa.mybookcollection.ui.dialogs.RemoveDialog
+import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyBooksFragment : Fragment() {
@@ -17,7 +19,9 @@ class MyBooksFragment : Fragment() {
     private val viewModel: MyBooksViewModel by viewModel()
     private var _binding: FragmentMyBooksBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var apiBookDetailDialog: DbBookDetailDialog
+    private lateinit var removeDialog: RemoveDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +36,11 @@ class MyBooksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         apiBookDetailDialog = DbBookDetailDialog(requireContext())
+        removeDialog = RemoveDialog(requireContext())
+
+        removeDialog.onItemClick = {
+            viewModel.removeBookFromLocalDb(it)
+        }
 
         viewListeners()
         viewModelObservers()
@@ -62,8 +71,22 @@ class MyBooksFragment : Fragment() {
             val adapter = MyBooksListAdapter(it)
             binding.rcBookList.layoutManager = GridLayoutManager(requireContext(), 3)
             binding.rcBookList.adapter = adapter
+
             adapter.onItemClick = {
                 apiBookDetailDialog.openBookDetailDialog(it)
+            }
+
+            adapter.onLongItemClick = {
+                removeDialog.openRemoveDialog(it)
+            }
+        }
+
+        viewModel.afterBookRemoved.observe(viewLifecycleOwner) { it ->
+            if (it == BookRemovedState.REMOVED) {
+                SnackBarUtils.showPositiveMessage(binding.root, "Book deleted")
+                getBooksFromLocalDb()
+            } else if (it == BookRemovedState.NOT_REMOVED) {
+                SnackBarUtils.showNegativeMessage(binding.root, "This book can't be deleted -- it has records!")
             }
         }
     }

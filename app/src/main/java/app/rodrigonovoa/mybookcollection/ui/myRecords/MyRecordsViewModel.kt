@@ -10,6 +10,7 @@ import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.db.BookCollectionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRepository) :
@@ -22,6 +23,9 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
 
     private val _totalRecords = MutableLiveData<Int>().apply { postValue(0) }
     val totalRecords: LiveData<Int> get() = _totalRecords
+
+    private val _reloadRecords = MutableLiveData<Boolean>().apply { postValue(false) }
+    val reloadRecods: LiveData<Boolean> get() = _reloadRecords
 
     fun getRecordsFromInterval(calendar: Calendar) {
         val startDay = getStartOfTheDayInMillis(calendar)
@@ -43,6 +47,13 @@ class MyRecordsViewModel(private val bookCollectionRepository: BookCollectionRep
             }
             _totalHours.postValue(totalHours)
             _totalRecords.postValue(records.size)
+        }
+    }
+
+    fun removeRecord(recordId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleted = bookCollectionRepository.deleteRecordById(recordId)
+            if (deleted > 0) _reloadRecords.postValue(true)
         }
     }
 

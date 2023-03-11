@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 
 class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapter<MyBooksListAdapter.ViewHolder>() {
     var onItemClick: ((Book) -> Unit)? = null
+    var onLongItemClick: ((Long) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,7 +28,12 @@ class MyBooksListAdapter(private val booksList: List<Book>) : RecyclerView.Adapt
         setTexts(holder, bookItem)
 
         holder.rlParentview.setOnClickListener {
-            onItemClick?.invoke(booksList[position])
+            onItemClick?.invoke(bookItem)
+        }
+
+        holder.rlParentview.setOnLongClickListener {
+            onLongItemClick?.invoke(bookItem.id.toLong())
+            return@setOnLongClickListener true
         }
     }
 

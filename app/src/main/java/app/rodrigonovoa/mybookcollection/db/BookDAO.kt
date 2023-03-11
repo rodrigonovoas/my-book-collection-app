@@ -19,4 +19,7 @@ interface BookDAO {
 
     @Delete
     fun deleteBook(user: BookEntity)
+
+    @Query("DELETE FROM BOOK WHERE ID = :id")
+    fun deleteBookById(id: Long): Int
 }

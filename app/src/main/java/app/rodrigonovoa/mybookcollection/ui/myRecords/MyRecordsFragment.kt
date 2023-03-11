@@ -13,6 +13,7 @@ import app.rodrigonovoa.mybookcollection.data.model.Record
 import app.rodrigonovoa.mybookcollection.databinding.FragmentMyRecordsBinding
 import app.rodrigonovoa.mybookcollection.ui.addRecord.AddRecordActivity
 import app.rodrigonovoa.mybookcollection.ui.dialogs.RecordDetailDialog
+import app.rodrigonovoa.mybookcollection.ui.dialogs.RemoveDialog
 import app.rodrigonovoa.mybookcollection.utils.DateUtils
 import app.rodrigonovoa.mybookcollection.utils.SnackBarUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,7 +31,9 @@ class MyRecordsFragment : Fragment() {
     private var _binding: FragmentMyRecordsBinding? = null
     private val binding get() = _binding!!
     private var dateCalendar: Calendar? = null
+
     private lateinit var detailDialog: RecordDetailDialog
+    private lateinit var removeDialog: RemoveDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,11 +48,16 @@ class MyRecordsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         detailDialog = RecordDetailDialog(requireContext())
+        removeDialog = RemoveDialog(requireContext())
 
         detailDialog.onItemClick = { record, comment ->
             val recordEntity =
                 RecordEntity(record.id, record.dateTime, record.spentTime, record.comment, record.bookId)
             updateCommentFromDialog(recordEntity, comment)
+        }
+
+        removeDialog.onItemClick = {
+            viewModel.removeRecord(it)
         }
 
         setCurrentDayInTextView()
@@ -59,6 +67,10 @@ class MyRecordsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        loadRecords()
+    }
+
+    private fun loadRecords() {
         if(dateCalendar != null) {
             viewModel.getRecordsFromInterval(dateCalendar!!)
         } else {
@@ -87,6 +99,10 @@ class MyRecordsFragment : Fragment() {
 
         viewModel.totalRecords.observe(viewLifecycleOwner) { it ->
             if(detailDialog != null) detailDialog.setTotalRecords(it)
+        }
+
+        viewModel.reloadRecods.observe(viewLifecycleOwner) { it ->
+            if(it) loadRecords()
         }
     }
 
@@ -121,6 +137,10 @@ class MyRecordsFragment : Fragment() {
         adapter.onItemClick = {
             detailDialog.openRecordDetailDialog(it)
             viewModel.getTotalHoursFromBookId(it.bookId)
+        }
+
+        adapter.onLongItemClick = {
+            removeDialog.openRemoveDialog(it)
         }
     }
 

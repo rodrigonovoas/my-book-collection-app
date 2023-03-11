@@ -33,6 +33,10 @@ class BookCollectionRepository(context: Context, scope: CoroutineScope) {
         bookDao.deleteBook(book)
     }
 
+    fun deleteBookById(id: Long): Int {
+        return bookDao.deleteBookById(id)
+    }
+
     /**
      * RECORD
      */
@@ -63,5 +67,9 @@ class BookCollectionRepository(context: Context, scope: CoroutineScope) {
 
     fun deleteRecord(record: RecordEntity) {
         recordDAO.deleteRecord(record)
+    }
+
+    fun deleteRecordById(id: Long): Int {
+        return recordDAO.deleteRecordById(id)
     }
 }
